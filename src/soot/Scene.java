@@ -210,43 +210,47 @@ public class Scene  //extends AbstractHost
         SourceLocator.v().invalidateClassPath();
     }
     
-    public String getSootClassPath()
-    {
-        if( sootClassPath == null ) {
-            String optionscp = Options.v().soot_classpath();
-            if( optionscp.length() > 0 )
-                sootClassPath = optionscp;
+		public String getSootClassPath()
+		{
+			if( sootClassPath == null ) {
+				String optionscp = Options.v().soot_classpath();
+				if( optionscp.length() > 0 )
+					sootClassPath = optionscp;
 
-            String defaultSootClassPath = defaultClassPath();
-	
-	        //if no classpath is given on the command line, take the default
-	        if( sootClassPath == null ) {
-	        	sootClassPath = defaultSootClassPath;
-	        } else {
-	        	//if one is given...
-	            if(Options.v().prepend_classpath()) {
-	            	//if the prepend flag is set, append the default classpath
-	            	sootClassPath += File.pathSeparator + defaultSootClassPath;
-	            } 
-	            //else, leave it as it is
-	        }   
-	        
-	        //add process-dirs
-	        List<String> process_dir = Options.v().process_dir();
-	        StringBuffer pds = new StringBuffer();
-	        for (String path : process_dir) {
-	        	if(!sootClassPath.contains(path)) {
-		        	pds.append(path);
-		        	pds.append(File.pathSeparator);
-	        	}
+				String defaultSootClassPath = defaultClassPath();
+
+				//if no classpath is given on the command line, take the default
+				if( sootClassPath == null ) {
+					sootClassPath = defaultSootClassPath;
+				} else {
+					//if one is given...
+					if(Options.v().prepend_classpath()) {
+						//if the prepend flag is set, append the default classpath
+						sootClassPath += File.pathSeparator + defaultSootClassPath;
+					} 
+					//else, leave it as it is
+				}   
+
+				//add process-dirs
+				List<String> process_dir = Options.v().process_dir();
+				StringBuffer pds = new StringBuffer();
+				for (String path : process_dir) {
+					if(!sootClassPath.contains(path)) {
+						pds.append(path);
+						pds.append(File.pathSeparator);
+					}
+				}
+				sootClassPath = pds + sootClassPath;
+
+				//add android.jar
+				if (Options.v().src_prec() == Options.src_prec_apk) {
+					sootClassPath += File.pathSeparator + getAndroidJar(sootClassPath);
+				}
 			}
-	        sootClassPath = pds + sootClassPath;
-        }
 
 
-
-        return sootClassPath;
-    }
+			return sootClassPath;
+		}
 
 	public String getAndroidJarPath(String jars, String apk) {
 		File jarsF = new File(jars);
@@ -392,17 +396,20 @@ public class Scene  //extends AbstractHost
 		}
 
 		String defaultClassPath = sb.toString();
-		
-		if (Options.v().src_prec() == Options.src_prec_apk) {
-			// check that android.jar is not in classpath
-			if (!defaultClassPath.contains ("android.jar")) {
+
+		return defaultClassPath;
+	}
+	
+		private String getAndroidJar(String currentSootClassPath) {
+				String jarPath = "";
+			// check that android.jar is not in current soot-classpath
+			if (!currentSootClassPath.contains ("android.jar")) {
 				String androidJars = Options.v().android_jars();
 				String forceAndroidJar = Options.v().force_android_jar();
 				if (androidJars.equals("") && forceAndroidJar.equals("")) {
 					throw new RuntimeException("You are analyzing an Android application but did not define android.jar. Options -android-jars or -force-android-jar should be used.");
 				}
 
-				String jarPath = "";
 				if (!forceAndroidJar.equals("")) {
 					jarPath = forceAndroidJar;
 				} else if (!androidJars.equals("")) {
@@ -426,15 +433,12 @@ public class Scene  //extends AbstractHost
 					throw new RuntimeException("file '"+ jarPath +"' does not exist!");
 				else
 					G.v().out.println("Using '"+ jarPath +"' as android.jar");
-				defaultClassPath += File.pathSeparator + jarPath;
 
 			} else {
 				G.v().out.println("warning: defaultClassPath contains android.jar! Options -android-jars and -force-android-jar are ignored!");
 			}
+		return jarPath;
 		}
-
-		return defaultClassPath;
-	}
 
 
     private int stateCount;
