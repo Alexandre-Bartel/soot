@@ -106,14 +106,14 @@ public final class ThrowableSet {
 	 * <code>ThrowableSet</code> representing all possible
 	 * Throwables.
 	 */
-	final ThrowableSet ALL_THROWABLES;
+	public final ThrowableSet ALL_THROWABLES;
 
 	/**
 	 * <code>ThrowableSet</code> containing all the asynchronous
 	 * and virtual machine errors, which may be thrown by any
 	 * bytecode instruction at any point in the computation.
 	 */
-	final ThrowableSet VM_ERRORS;
+	public final ThrowableSet VM_ERRORS;
 
 	/**
 	 * <code>ThrowableSet</code> containing all the exceptions
@@ -121,21 +121,21 @@ public final class ThrowableSet {
 	 * to another class, including the process of loading, preparing,
 	 * and verifying the referenced class.
 	 */
-	final ThrowableSet RESOLVE_CLASS_ERRORS;
+	public final ThrowableSet RESOLVE_CLASS_ERRORS;
 
 	/**
 	 * <code>ThrowableSet</code> containing all the exceptions
 	 * that may be thrown in the course of resolving a reference
 	 * to a field.
 	 */
-	final ThrowableSet RESOLVE_FIELD_ERRORS;
+	public final ThrowableSet RESOLVE_FIELD_ERRORS;
 
 	/**
 	 * <code>ThrowableSet</code> containing all the exceptions
 	 * that may be thrown in the course of resolving a reference
 	 * to a non-static method.
 	 */
-	final ThrowableSet RESOLVE_METHOD_ERRORS;
+	public final ThrowableSet RESOLVE_METHOD_ERRORS;
 
 	/**
 	 * <code>ThrowableSet</code> containing all the exceptions
@@ -144,7 +144,7 @@ public final class ThrowableSet {
 	 * UnsatisfiedLinkError, which is raised at runtime rather than
 	 * linking type).
 	 */
-	final ThrowableSet INITIALIZATION_ERRORS;
+	public final ThrowableSet INITIALIZATION_ERRORS;
 
 	final RefType RUNTIME_EXCEPTION;
 	final RefType ARITHMETIC_EXCEPTION;
